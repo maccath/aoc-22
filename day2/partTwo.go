@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	s "strings"
 )
 
@@ -54,7 +55,8 @@ func main() {
 	outcomes[scissors][lose] = paper
 	outcomes[scissors][draw] = scissors
 
-	f, err := os.Open("/Users/katy/Developer/aoc-22/day2/input")
+	pwd, _ := os.Getwd()
+	f, err := os.Open(filepath.Join(pwd, "day2", "input"))
 	check(err)
 
 	scanner := bufio.NewScanner(f)

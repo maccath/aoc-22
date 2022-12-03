@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	s "strings"
 )
 
@@ -14,7 +15,8 @@ func check(e error) {
 }
 
 func main() {
-	f, err := os.Open("/Users/katy/Developer/aoc-22/day3/input")
+	pwd, _ := os.Getwd()
+	f, err := os.Open(filepath.Join(pwd, "day3", "input"))
 	check(err)
 
 	scanner := bufio.NewScanner(f)

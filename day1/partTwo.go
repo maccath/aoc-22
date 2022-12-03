@@ -4,41 +4,40 @@ import (
 	"fmt"
 	"github.com/maccath/aoc-22/internal/pkg/util"
 	"path/filepath"
+	"sort"
 	"strconv"
 )
 
 func main() {
+	topNum := 3
+	elves := make([]int, topNum)
+	var carrying int
+
 	scanner := util.FileScanner(filepath.Join("day1", "input"))
 
-	var a [3]int
-
-	tot := 0
 	for scanner.Scan() {
-		num, _ := strconv.ParseInt(scanner.Text(), 10, 64)
+		num, _ := strconv.Atoi(scanner.Text())
+		emptyLine := num == 0
 
-		if int(num) != 0 {
-			// Increment the total held by current elf
-			tot = int(num) + tot
+		if !emptyLine {
+			carrying += num
 			continue
 		}
 
-		if tot > a[0] {
-			a[2] = a[1]
-			a[1] = a[0]
-			a[0] = tot
-		} else if tot > a[1] {
-			a[2] = a[1]
-			a[1] = tot
-		} else if tot > a[2] {
-			a[2] = tot
+		lastItem := len(elves) - 1
+		if carrying > elves[lastItem] {
+			elves = append(elves[:lastItem], carrying)
+			sort.Sort(sort.Reverse(sort.IntSlice(elves)))
 		}
 
-		// Onto the next elf
-		tot = 0
+		carrying = 0
 	}
 
-	fmt.Println(a[0])
-	fmt.Println(a[1])
-	fmt.Println(a[2])
-	fmt.Println(a[0] + a[1] + a[2])
+	var total int
+	for _, val := range elves {
+		total += val
+	}
+
+	fmt.Println("The top", topNum, "elves are carrying", elves, "calories")
+	fmt.Println("The total calories carried by the elves is", total)
 }

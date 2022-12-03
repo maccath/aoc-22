@@ -8,25 +8,25 @@ import (
 )
 
 func main() {
+	var max int
+	var total int
+
 	scanner := util.FileScanner(filepath.Join("day1", "input"))
 
-	max := 0
-	total := 0
 	for scanner.Scan() {
-		num, _ := strconv.ParseInt(scanner.Text(), 10, 64)
+		num, _ := strconv.Atoi(scanner.Text())
+		emptyLine := num == 0
 
-		// Onto the next elf
-		if int(num) == 0 {
-			if total > max {
-				max = total
-			}
-			total = 0
+		if !emptyLine {
+			total += num
 			continue
 		}
 
-		// Increment the total held by current elf
-		total = int(num) + total
+		if total > max {
+			max = total
+		}
+		total = 0
 	}
 
-	fmt.Println(max)
+	fmt.Println("The top elf is carrying", max, "calories")
 }

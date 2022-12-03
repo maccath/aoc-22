@@ -7,54 +7,56 @@ import (
 	s "strings"
 )
 
+func getDuplicate(bags [groupSize]string) rune {
+	checked := map[string]bool{}
+	var c rune
+	var found bool
+
+	for _, c := range bags[0] {
+		if checked[string(c)] {
+			continue
+		}
+
+		checked[string(c)] = true
+		found = true
+		for _, b := range bags[1:] {
+			if !s.Contains(b, string(c)) {
+				found = false
+			}
+		}
+
+		if found {
+			return c
+		}
+	}
+
+	return c
+}
+
+const groupSize = 3
+
 func main() {
 	scanner := util.FileScanner(filepath.Join("day3", "input"))
 
-	total := 0
+	var total int
+	var i int
+	var bags [groupSize]string
 
-	groups := map[int]map[int]string{}
-	i := 0
-	j := 0
 	for scanner.Scan() {
-		_, prs := groups[i]
-		if prs == false {
-			groups[i] = map[int]string{}
-		}
-		groups[i][j] = scanner.Text()
-		if j == 2 {
+		bags[i] = scanner.Text()
+
+		if i < (groupSize - 1) {
 			i++
-			j = 0
-		} else {
-			j++
-		}
-	}
-
-	for _, bags := range groups {
-		var duplicate string
-		var priority int
-		checked := map[string]bool{}
-
-		for _, c := range bags[0] {
-			if checked[string(c)] {
-				continue
-			}
-
-			checked[string(c)] = true
-			if s.Contains(bags[1], string(c)) && s.Contains(bags[2], string(c)) {
-				duplicate = string(c)
-				if int(c) > 96 { // lowercase
-					priority = int(c) - 96
-				} else { // uppercase
-					priority = int(c) - 38
-				}
-				break
-			}
+			continue
 		}
 
-		total = total + priority
+		duplicate := getDuplicate(bags)
+		priority := util.GetPriority(duplicate)
+		total += priority
+		i = 0
 
-		fmt.Println(bags[0], bags[1], bags[2])
-		fmt.Println(duplicate, priority, total)
+		fmt.Println("The next group of", groupSize, "bags all contain a", string(duplicate), "item, with priority", priority)
 	}
-	fmt.Println(total)
+
+	fmt.Println("Total priority of all groups is", total)
 }

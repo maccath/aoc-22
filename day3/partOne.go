@@ -7,6 +7,25 @@ import (
 	s "strings"
 )
 
+func findDuplicate(part1 string, part2 string) rune {
+	var duplicate rune
+	checked := map[string]bool{}
+
+	for _, c := range part1 {
+		if checked[string(c)] {
+			continue
+		}
+
+		checked[string(c)] = true
+		if s.Contains(part2, string(c)) {
+			duplicate = c
+			break
+		}
+	}
+
+	return duplicate
+}
+
 func main() {
 	scanner := util.FileScanner(filepath.Join("day3", "input"))
 
@@ -18,30 +37,13 @@ func main() {
 		part1 := contents[:len(contents)/2]
 		part2 := contents[len(contents)/2:]
 
-		var duplicate string
-		var priority int
-		checked := map[string]bool{}
+		duplicate := findDuplicate(part1, part2)
+		priority := util.GetPriority(duplicate)
 
-		for _, c := range part1 {
-			if checked[string(c)] {
-				continue
-			}
+		total += priority
 
-			checked[string(c)] = true
-			if s.Contains(part2, string(c)) {
-				duplicate = string(c)
-				if int(c) > 96 { // lowercase
-					priority = int(c) - 96
-				} else { // uppercase
-					priority = int(c) - 38
-				}
-				break
-			}
-		}
-
-		total = total + priority
-
-		fmt.Println(part1, part2, duplicate, priority, total)
+		fmt.Println("Item of type", string(duplicate), "is incorrectly arranged, with priority", priority)
 	}
-	fmt.Println(total)
+
+	fmt.Println("Total priority of incorrectly arranged items is", total)
 }

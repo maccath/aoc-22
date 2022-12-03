@@ -1,25 +1,14 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"github.com/maccath/aoc-22/internal/pkg/util"
 	"path/filepath"
 	"strconv"
 )
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
 func main() {
-	pwd, _ := os.Getwd()
-	f, err := os.Open(filepath.Join(pwd, "day1", "input"))
-	check(err)
-
-	scanner := bufio.NewScanner(f)
+	scanner := util.FileScanner(filepath.Join("day1", "input"))
 
 	max := 0
 	total := 0
@@ -40,6 +29,4 @@ func main() {
 	}
 
 	fmt.Println(max)
-
-	check(scanner.Err())
 }

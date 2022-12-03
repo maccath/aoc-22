@@ -1,25 +1,15 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"github.com/maccath/aoc-22/internal/pkg/util"
 	"path/filepath"
 	s "strings"
 )
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
 func main() {
-	pwd, _ := os.Getwd()
-	f, err := os.Open(filepath.Join(pwd, "day3", "input"))
-	check(err)
+	scanner := util.FileScanner(filepath.Join("day3", "input"))
 
-	scanner := bufio.NewScanner(f)
 	total := 0
 
 	groups := map[int]map[int]string{}
@@ -67,6 +57,4 @@ func main() {
 		fmt.Println(duplicate, priority, total)
 	}
 	fmt.Println(total)
-
-	check(scanner.Err())
 }

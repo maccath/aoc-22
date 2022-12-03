@@ -1,18 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"github.com/maccath/aoc-22/internal/pkg/util"
 	"path/filepath"
 	s "strings"
 )
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
 
 func main() {
 	const rock string = "rock"
@@ -55,11 +48,7 @@ func main() {
 	outcomes[scissors][paper] = lose
 	outcomes[scissors][scissors] = draw
 
-	pwd, _ := os.Getwd()
-	f, err := os.Open(filepath.Join(pwd, "day2", "input"))
-	check(err)
-
-	scanner := bufio.NewScanner(f)
+	scanner := util.FileScanner(filepath.Join("day2", "input"))
 
 	total := 0
 	for scanner.Scan() {
@@ -80,6 +69,4 @@ func main() {
 	}
 
 	fmt.Println("Total score:", total)
-
-	check(scanner.Err())
 }

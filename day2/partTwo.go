@@ -2,55 +2,24 @@ package main
 
 import (
 	"fmt"
+	"github.com/maccath/aoc-22/internal/pkg/janken"
 	"github.com/maccath/aoc-22/internal/pkg/util"
 	"path/filepath"
 	s "strings"
 )
 
 func main() {
-	const rock string = "rock"
-	const paper string = "paper"
-	const scissors string = "scissors"
-
-	const win string = "win"
-	const lose string = "lose"
-	const draw string = "draw"
-
 	plays := make(map[string]string)
-	plays["A"] = rock
-	plays["B"] = paper
-	plays["C"] = scissors
-	plays["X"] = lose
-	plays["Y"] = draw
-	plays["Z"] = win
-
-	scores := make(map[string]int)
-	scores[rock] = 1
-	scores[paper] = 2
-	scores[scissors] = 3
-	scores[win] = 6
-	scores[lose] = 0
-	scores[draw] = 3
-
-	outcomes := map[string]map[string]string{
-		rock:     {},
-		paper:    {},
-		scissors: {},
-	}
-	// Them - You
-	outcomes[rock][draw] = rock
-	outcomes[rock][win] = paper
-	outcomes[rock][lose] = scissors
-	outcomes[paper][lose] = rock
-	outcomes[paper][draw] = paper
-	outcomes[paper][win] = scissors
-	outcomes[scissors][win] = rock
-	outcomes[scissors][lose] = paper
-	outcomes[scissors][draw] = scissors
+	plays["A"] = janken.Rock
+	plays["B"] = janken.Paper
+	plays["C"] = janken.Scissors
+	plays["X"] = janken.Lose
+	plays["Y"] = janken.Draw
+	plays["Z"] = janken.Win
 
 	scanner := util.FileScanner(filepath.Join("day2", "input"))
 
-	total := 0
+	var total int
 	for scanner.Scan() {
 		round := scanner.Text()
 
@@ -58,14 +27,13 @@ func main() {
 
 		opponent := plays[items[0]]
 		outcome := plays[items[1]]
-		play := outcomes[opponent][outcome]
+		play := janken.Fix(opponent, outcome)
+		score := janken.Score(play, outcome)
 
-		total = total + scores[play] + scores[outcome]
+		total += score
 
-		fmt.Println(outcome, "against", opponent)
-		fmt.Println("play", play)
-		fmt.Println(scores[play], "+", scores[outcome])
-		fmt.Println(total)
+		fmt.Println("You must", outcome, "against", opponent)
+		fmt.Println("You play", play, "and score", score)
 	}
 
 	fmt.Println(total)
